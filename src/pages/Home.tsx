@@ -8,12 +8,10 @@ const Home = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       navigate("/");
       return;
     }
-
     const checkTokenExpiration = () => {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
@@ -32,9 +30,7 @@ const Home = () => {
         navigate("/");
       }
     };
-
     const interval = setInterval(checkTokenExpiration, 1000);
-
     return () => clearInterval(interval);
   }, [navigate]);
 
