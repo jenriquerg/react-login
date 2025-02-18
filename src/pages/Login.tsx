@@ -16,25 +16,31 @@ const Login = () => {
       toast.error("Por favor ingresa ambos campos");
       return;
     }
-
+  
     try {
-      const response = await axios.post("http://localhost:3000/login", { username, password });
-      if (response.data.statusCode === 200) {
-        localStorage.setItem("token", response.data.intDataMessage[0].credentials);
+      const { data } = await axios.post("http://localhost:3000/login", { username, password });
+  
+      if (data.statusCode === 200) {
+        localStorage.setItem("token", data.intDataMessage[0].credentials);
         toast.success("Bienvenido! Has iniciado sesión exitosamente.");
         navigate("/home");
       } else {
-        toast.error(response.data.intDataMessage[0].message || "Credenciales incorrectas");
+        toast.error(data.intDataMessage[0].message || "Credenciales incorrectas");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      toast.error("Error al iniciar sesión");
+  
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.intDataMessage?.[0]?.message || "Error al iniciar sesión");
+      } else {
+        toast.error("Ocurrió un error inesperado");
+      }
     }
-    
   };
+  
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray bg-gray-800">
+    <div className="flex items-center justify-center min-h-screen bg-gray-800">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-sm">
         <h2 className="text-4xl font-bold text-center text-blue-600 mb-8">Bienvenido</h2>
 
@@ -71,6 +77,7 @@ const Login = () => {
         >
           Ingresar
         </button>
+        <a href="/register" className="block text-center mt-4 text-blue-500">Registrarme</a>
       </div>
     </div>
   );
