@@ -16,20 +16,30 @@ const Login = () => {
       toast.error("Por favor ingresa ambos campos");
       return;
     }
-  
+
     try {
-      const { data } = await axios.post("http://localhost:3000/login", { username, password });
-  
+      const { data } = await axios.post("http://localhost:3000/auth/login", { username, password });
+
       if (data.statusCode === 200) {
-        localStorage.setItem("token", data.intDataMessage[0].credentials);
+        const token = data.intDataMessage[0].credentials;
+        localStorage.setItem("token", token);
+
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const userRole = payload.role;
+
         toast.success("Bienvenido! Has iniciado sesión exitosamente.");
-        navigate("/home");
+        
+        // Redireccionar según el rol
+        if (userRole === "master") {
+          navigate("/master_home");
+        } else {
+          navigate("/common_user_home");
+        }
       } else {
         toast.error(data.intDataMessage[0].message || "Credenciales incorrectas");
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error(error);
-  
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.intDataMessage?.[0]?.message || "Error al iniciar sesión");
       } else {
@@ -37,7 +47,6 @@ const Login = () => {
       }
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800">

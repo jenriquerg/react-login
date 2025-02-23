@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Home = () => {
+const MasterHome = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800">
-      <h2 className="text-2xl text-white font-bold mb-4">Bienvenido al Home mi may</h2>
+      <h2 className="text-2xl text-white font-bold mb-4">Modulo Administardor</h2>
       <button 
         className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         onClick={() => { 
@@ -51,4 +51,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default MasterHome;
